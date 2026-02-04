@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/api_service.dart';
-import 'scan_screen.dart';
+import 'main_menu_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,10 +33,10 @@ class _LoginScreenState extends State<LoginScreen> {
       await _apiService.login(email, password);
 
       if (mounted) {
-        // Pindah ke Screen Scan dan hapus history login agar tidak bisa back
+        // Pindah ke Main Menu dan hapus history login agar tidak bisa back
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ScanScreen()),
+          MaterialPageRoute(builder: (context) => const MainMenuScreen()),
         );
       }
     } catch (e) {
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.inter(color: Colors.grey.shade600),
               ),
               const SizedBox(height: 40),
-              
+
               // Email Input
               TextField(
                 controller: _emailController,
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-              
+
               // Password Input
               TextField(
                 controller: _passwordController,
@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Login Button
               SizedBox(
                 width: double.infinity,

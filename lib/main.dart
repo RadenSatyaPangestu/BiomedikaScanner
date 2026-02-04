@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/login_screen.dart';
-import 'screens/scan_screen.dart';
+import 'screens/main_menu_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Cek status login
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
@@ -32,16 +32,14 @@ class MyApp extends StatelessWidget {
           secondary: Colors.indigoAccent,
         ),
         useMaterial3: true,
-        textTheme: GoogleFonts.interTextTheme(
-          Theme.of(context).textTheme,
-        ),
+        textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           backgroundColor: Colors.indigo,
           foregroundColor: Colors.white,
         ),
       ),
-      home: isLoggedIn ? const ScanScreen() : const LoginScreen(),
+      home: isLoggedIn ? const MainMenuScreen() : const LoginScreen(),
     );
   }
 }

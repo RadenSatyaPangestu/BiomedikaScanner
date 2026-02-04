@@ -1,10 +1,9 @@
-import 'dart:convert'; // Import penting untuk JSON
+import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import 'login_screen.dart';
 import 'settings_screen.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -22,25 +21,10 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   // Ukuran kotak scan
   final double _scanWindowSize = 300.0;
 
-  // Double back to exit
-  DateTime? _lastPressedAt;
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  void _handleLogout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
   }
 
   Future<void> _handleRefresh() async {
@@ -588,167 +572,122 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
       height: _scanWindowSize,
     );
 
-    return WillPopScope(
-      onWillPop: () async {
-        final now = DateTime.now();
-        final maxDuration = const Duration(seconds: 2);
-        final isWarningStillActive =
-            _lastPressedAt != null &&
-            now.difference(_lastPressedAt!) < maxDuration;
-
-        if (isWarningStillActive) {
-          return true; // Boleh keluar
-        }
-
-        _lastPressedAt = now;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Tekan sekali lagi untuk keluar"),
-            duration: Duration(seconds: 2),
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          'Scanner',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
-        );
-        return false; // Jangan keluar dulu
-      },
-      child: Scaffold(
-        extendBodyBehindAppBar: true, // Agar konten naik ke belakang status bar
-        appBar: AppBar(
-          title: Text(
-            'Scanner',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.black26, // Transparan
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.history_rounded),
-              onPressed: _showHistory,
-              tooltip: 'Riwayat',
-            ),
-            ValueListenableBuilder(
-              valueListenable: _controller,
-              builder: (context, state, child) {
-                final isTorchOn = state.torchState == TorchState.on;
-                return IconButton(
-                  icon: Icon(
-                    isTorchOn ? Icons.flash_on : Icons.flash_off,
-                    color: isTorchOn ? Colors.amber : Colors.white,
-                  ),
-                  onPressed: () => _controller.toggleTorch(),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.logout_rounded),
-              onPressed: _handleLogout,
-              tooltip: 'Keluar',
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ),
-                );
-              },
-              tooltip: 'Server Settings',
-            ),
-            const SizedBox(width: 8),
-          ],
         ),
-        body: Stack(
-          children: [
-            // 1. Full Screen Camera
-            MobileScanner(
-              controller: _controller,
-              scanWindow: scanWindowRect,
-              onDetect: _onDetect,
-            ),
-
-            // 2. Modern Overlay (Glassmorphism Effect)
-            // Menggunakan ColorFilter untuk menggelapkan area luar tanpa membuatnya hitam pekat padat
-            CustomPaint(
-              painter: ModernScannerOverlayPainter(
-                borderColor: Colors.white,
-                borderRadius: 24,
-                borderLength: 40,
-                borderWidth: 4,
-                cutOutSize: _scanWindowSize,
-                overlayColor: const Color.fromRGBO(
-                  0,
-                  0,
-                  0,
-                  0.6,
-                ), // Hitam transparan lebih smooth
-              ),
-              child: Container(),
-            ),
-
-            // 3. UI Elements (Text Helper)
-            Positioned(
-              bottom: 100,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black45,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white24),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.qr_code_scanner,
-                          color: Colors.white70,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          "Arahkan kamera ke QR Code",
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Tombol Refresh Floating Modern
-                  FloatingActionButton.small(
-                    backgroundColor: Colors.white24,
-                    elevation: 0,
-                    onPressed: _handleRefresh,
-                    child: const Icon(Icons.refresh, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-
-            // 4. Loading Indicator Overlay (Tetap sama)
-            if (_isProcessing)
-              Container(
-                color: const Color.fromRGBO(0, 0, 0, 0.7),
-                child: const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
+        centerTitle: true,
+        backgroundColor: Colors.black26,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            onPressed: _showHistory,
+            tooltip: 'Riwayat',
+          ),
+          ValueListenableBuilder(
+            valueListenable: _controller,
+            builder: (context, state, child) {
+              final isTorchOn = state.torchState == TorchState.on;
+              return IconButton(
+                icon: Icon(
+                  isTorchOn ? Icons.flash_on : Icons.flash_off,
+                  color: isTorchOn ? Colors.amber : Colors.white,
                 ),
+                onPressed: () => _controller.toggleTorch(),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: Stack(
+        children: [
+          // 1. Full Screen Camera
+          MobileScanner(
+            controller: _controller,
+            scanWindow: scanWindowRect,
+            onDetect: _onDetect,
+          ),
+
+          // 2. Modern Overlay (Glassmorphism Effect)
+          CustomPaint(
+            painter: ModernScannerOverlayPainter(
+              borderColor: Colors.white,
+              borderRadius: 24,
+              borderLength: 40,
+              borderWidth: 4,
+              cutOutSize: _scanWindowSize,
+              overlayColor: const Color.fromRGBO(0, 0, 0, 0.6),
+            ),
+            child: Container(),
+          ),
+
+          // 3. UI Elements (Text Helper)
+          Positioned(
+            bottom: 100,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black45,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Colors.white24),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.white70,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        "Arahkan kamera ke QR Code",
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Tombol Refresh Floating Modern
+                FloatingActionButton.small(
+                  backgroundColor: Colors.white24,
+                  elevation: 0,
+                  onPressed: _handleRefresh,
+                  child: const Icon(Icons.refresh, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+
+          // 4. Loading Indicator Overlay
+          if (_isProcessing)
+            Container(
+              color: const Color.fromRGBO(0, 0, 0, 0.7),
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.white),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

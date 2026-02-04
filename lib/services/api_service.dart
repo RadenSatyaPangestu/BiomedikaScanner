@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Default jika belum disetting user
-  static const String _defaultUrl = 'http://192.168.1.200:8000';
+  static const String _defaultUrl = 'https://aorukudomain.my.id';
 
   Future<String> _getBaseUrl() async {
     final prefs = await SharedPreferences.getInstance();

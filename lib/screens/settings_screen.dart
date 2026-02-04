@@ -13,7 +13,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _urlController = TextEditingController();
   bool _isLoading = false;
-  final String _defaultUrl = 'http://192.168.1.200:8000';
+  final String _defaultUrl = 'https://aorukudomain.my.id';
 
   @override
   void initState() {
@@ -151,7 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               controller: _urlController,
               decoration: InputDecoration(
                 labelText: 'Base URL',
-                hintText: 'http://192.168.x.x:8000',
+                hintText: 'https://aorukudomain.my.id',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
