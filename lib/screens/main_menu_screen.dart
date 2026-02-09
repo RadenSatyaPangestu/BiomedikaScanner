@@ -5,6 +5,7 @@ import 'scan_screen.dart';
 import 'scan_upload_screen.dart';
 import 'settings_screen.dart';
 import 'login_screen.dart';
+import 'inventory_list_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -139,15 +140,19 @@ class MainMenuScreen extends StatelessWidget {
                       },
                     ),
                     // Placeholder for future features or history shortcut
+                    // Link to Inventory List
                     _buildMenuCard(
                       context,
-                      title: "Bantuan",
-                      subtitle: "Panduan",
-                      icon: Icons.help_outline,
+                      title: "Daftar Barang",
+                      subtitle: "Lihat Semua Aset",
+                      icon: Icons.list_alt_rounded,
                       color: Colors.orange,
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Fitur belum tersedia")),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InventoryListScreen(),
+                          ),
                         );
                       },
                     ),
@@ -190,30 +195,39 @@ class MainMenuScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 32),
+                child: Icon(icon, color: color, size: 28),
               ),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+              const SizedBox(height: 12),
+              Flexible(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                subtitle,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(fontSize: 12, color: Colors.grey),
+              Flexible(
+                child: Text(
+                  subtitle,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ],
           ),
