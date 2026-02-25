@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   // Default jika belum disetting user
-  static const String _defaultUrl = 'https://aorukudomain.my.id';
+  static const String _defaultUrl = 'https://bme.aorukudomain.my.id';
 
   Future<String> _getBaseUrl() async {
     final prefs = await SharedPreferences.getInstance();
@@ -194,7 +194,8 @@ class ApiService {
 
       if (response.statusCode != 200 && response.statusCode != 204) {
         throw Exception(
-            'Gagal hapus barang: ${response.statusCode} - ${response.body}');
+          'Gagal hapus barang: ${response.statusCode} - ${response.body}',
+        );
       }
     } catch (e) {
       throw Exception('Error Delete Item: $e');

@@ -15,6 +15,7 @@ class Item {
   final String? status;
   final String? condition;
   final String? imagePath;
+  final String? imageUrl; // Tambahan untuk URL absolut gambar
 
   // Keep category for backward compatibility with List Screen if needed,
   // or map 'type' to it.
@@ -37,6 +38,7 @@ class Item {
     this.status,
     this.condition,
     this.imagePath,
+    this.imageUrl,
     this.category = '',
   });
 
@@ -76,6 +78,7 @@ class Item {
       status: json['status'],
       condition: json['condition'],
       imagePath: json['image_path'],
+      imageUrl: json['image_url'],
 
       // Fallback for category from type if category is missing in JSON
       category: json['category'] ?? json['type'] ?? '',

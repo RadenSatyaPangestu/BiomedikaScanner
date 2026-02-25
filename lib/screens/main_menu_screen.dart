@@ -6,6 +6,7 @@ import 'scan_upload_screen.dart';
 import 'settings_screen.dart';
 import 'login_screen.dart';
 import 'inventory_list_screen.dart';
+import 'batch_scan_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -105,6 +106,21 @@ class MainMenuScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ScanScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildMenuCard(
+                      context,
+                      title: "Batch Scan",
+                      subtitle: "Scan Banyak Aset",
+                      icon: Icons.auto_awesome_motion,
+                      color: Colors.deepPurple,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BatchScanScreen(),
                           ),
                         );
                       },

@@ -87,10 +87,12 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
     );
 
     if (_isEditing) {
-      if (_statusList.contains(widget.item?.status))
+      if (_statusList.contains(widget.item?.status)) {
         _selectedStatus = widget.item?.status;
-      if (_conditionList.contains(widget.item?.condition))
+      }
+      if (_conditionList.contains(widget.item?.condition)) {
         _selectedCondition = widget.item?.condition;
+      }
       _selectedRoomId = widget.item?.roomId;
       _acquisitionYear = widget.item?.acquisitionYear;
       _placedInServiceAt = widget.item?.placedInServiceAt;
@@ -236,16 +238,18 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
           data,
           imagePath: _imageFile?.path,
         );
-        if (mounted)
+        if (mounted) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(const SnackBar(content: Text('Updated successfully')));
+        }
       } else {
         await _apiService.createItem(data, imagePath: _imageFile?.path);
-        if (mounted)
+        if (mounted) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(const SnackBar(content: Text('Created successfully')));
+        }
       }
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
@@ -356,7 +360,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
                   Expanded(
                     child: _useTypeDropdown
                         ? DropdownButtonFormField<String>(
-                            value:
+                            initialValue:
                                 _selectedType, // Should make sure this matches items value
                             decoration: const InputDecoration(
                               labelText: 'Type / category',
@@ -402,7 +406,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
 
               // --- Dropdowns ---
               DropdownButtonFormField<dynamic>(
-                value: _selectedRoomId, // Ensure type matching (int vs string)
+                initialValue: _selectedRoomId, // Ensure type matching (int vs string)
                 decoration: const InputDecoration(
                   labelText: 'Room / Location',
                   border: OutlineInputBorder(),
@@ -422,7 +426,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _selectedStatus,
+                      initialValue: _selectedStatus,
                       decoration: const InputDecoration(
                         labelText: 'Status',
                         border: OutlineInputBorder(),
@@ -438,7 +442,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _selectedCondition,
+                      initialValue: _selectedCondition,
                       decoration: const InputDecoration(
                         labelText: 'Condition',
                         border: OutlineInputBorder(),

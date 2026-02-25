@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RemoteUploadService {
-  static const String _defaultUrl = 'https://aorukudomain.my.id';
+  static const String _defaultUrl = 'https://bme.aorukudomain.my.id';
 
   Future<String> _getUploadUrl() async {
     final prefs = await SharedPreferences.getInstance();
